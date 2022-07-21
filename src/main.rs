@@ -12,9 +12,9 @@ fn main() {
 }
 
 fn main_inner() -> io::Result<()> {
-    let mut stream = TcpStream::connect("www.apple.com:80")?; 
+    let mut stream = TcpStream::connect("www.yahoo.com:80")?; 
     println!("we made it");
-    let response = stream.write(b"HTTP/1.1 200 OK\r\n\r\n"); 
+    let response = stream.write(b"GET / HTTP/1.1\r\n\r\n"); 
     let mut recieved: Vec<u8> = vec![]; 
     let mut buffer = [0u8; 256];
 
