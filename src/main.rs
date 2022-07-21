@@ -1,9 +1,14 @@
 use std::{
-    io::{self, Write, Read},
+    io::{self, Read},
     net::TcpStream,
 };
 fn main() {
-    
+    match main_inner() {
+        Ok(_) => {},
+        Err(e) => {
+            println!("{}", e);
+        }
+    }
 }
 
 fn main_inner() -> io::Result<()> {
