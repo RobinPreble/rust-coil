@@ -21,10 +21,11 @@ fn main_inner() -> io::Result<()> {
     loop {
         let bytes_read = stream.read(&mut buffer)?; 
         recieved.extend(buffer); 
-        if bytes_read < 256 {
+        if bytes_read == 0 {
             break
         }
     }
-    println!("woo{:?}", recieved);
+    let result = String::from_utf8(recieved);
+    println!("{:?}", result);
     Ok(())
 }
