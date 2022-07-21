@@ -1,9 +1,14 @@
 use std::{
     io::{self, Write, Read},
     net::TcpStream,
+    env
 };
 fn main() {
-    match main_inner() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 3 {
+        panic!("Please provide the address and port as arguments");
+    }
+    match main_inner(&args[1], &args[2]) {
         Ok(_) => {},
         Err(e) => {
             println!("{}", e);
@@ -11,9 +16,10 @@ fn main() {
     }
 }
 
-fn main_inner() -> io::Result<()> {
+fn main_inner(add: &str, port: &str) -> io::Result<()> {
     // let mut stream = TcpStream::connect("www.yahoo.com:80")?; 
-    let mut stream = TcpStream::connect("captive.apple.com:80")?; 
+    //let mut stream = TcpStream::connect("captive.apple.com:80")?; 
+    let mut stream = TcpStream::connect(add.to_string() + ":" + port)?; 
 
     let response = stream.write(b"GET / HTTP/1.1\r\n\r\n"); 
     let mut recieved: Vec<u8> = vec![]; 
