@@ -25,7 +25,7 @@ fn main_inner() -> io::Result<()> {
             break
         }
     }
-    let result = String::from_utf8(recieved);
-    println!("{:?}", result);
+    let result = String::from_utf8(recieved).unwrap();
+    println!("{}", result);
     Ok(())
 }
