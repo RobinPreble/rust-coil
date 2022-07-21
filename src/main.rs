@@ -21,6 +21,7 @@ fn main_inner() -> io::Result<()> {
     loop {
         let bytes_read = stream.read(&mut buffer)?; 
         recieved.extend(buffer); 
+        buffer = [0u8; 256]; //reset buffer
         if bytes_read == 0 {
             break
         }
