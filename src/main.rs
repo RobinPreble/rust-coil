@@ -10,11 +10,14 @@ fn main() {
     match get_raw_html(&args[1]) {
         Ok(raw_html) => {
             println!("{}", raw_html);
+            println!("Links: {:?}", get_links(&raw_html));
         },
         Err(e) => {
             println!("{}", e);
         }
     }
+
+    
 }
 
 fn get_raw_html(url: &str) -> Result<String, Box<dyn std::error::Error>> {
@@ -46,6 +49,22 @@ fn get_raw_html(url: &str) -> Result<String, Box<dyn std::error::Error>> {
 
 
     Ok(response)
+}
+
+fn get_links(raw_html: &String) -> Vec<Box<String>> {
+    let document = Html::parse_document(raw_html);
+    let link_selector = Selector::parse("a").unwrap();
+    
+
+    let mut links: Vec<Box<String>> = Vec::new();
+
+    for lnk in document.select(&link_selector) {
+        let href = lnk.value().attr("href").unwrap_or("invalid link").to_owned();
+        if href.starts_with("http"){
+            links.push(Box::new(href));
+        }
+    }
+    links
 }
 
 
