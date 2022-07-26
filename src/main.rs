@@ -4,13 +4,14 @@ use scraper::{Html, Selector};
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
-        panic!("Please provide the address and port as arguments");
+        panic!("Please provide the url as an argument");
     }
     
     match get_raw_html(&args[1]) {
         Ok(raw_html) => {
             println!("{}", raw_html);
             println!("Links: {:?}", get_links(&raw_html));
+            println!("Images: {:?}", get_images(&raw_html));
         },
         Err(e) => {
             println!("{}", e);
@@ -22,40 +23,12 @@ fn main() {
 
 fn get_raw_html(url: &str) -> Result<String, Box<dyn std::error::Error>> {
     let response = reqwest::blocking::get(url)?.text()?;
-    //println!("{}", response);
-    //response.matches(is_link());
-
-    // let document = Html::parse_document(&response);
-    // let link_selector = Selector::parse("a").unwrap();
-    
-
-    // let mut links: Vec<&str> = Vec::new();
-
-    // for lnk in document.select(&link_selector) {
-    //     let href = lnk.value().attr("href").unwrap_or("invalid link");
-    //     if href.starts_with("http"){
-    //         links.push(&href);
-    //     }
-    // }
-    // println!("Links: {:?}", links);
-
-    // let image_selector = Selector::parse("img").unwrap();
-    // let mut images: Vec<&str> = Vec::new(); 
-    // for thingy in document.select(&image_selector) {
-    //     let img = thingy.value().attr("src").unwrap_or("invalid image");
-    //     images.push(&img);
-    // }
-    // println!("Images: {:?}", images);
-
-
     Ok(response)
 }
 
 fn get_links(raw_html: &String) -> Vec<Box<String>> {
     let document = Html::parse_document(raw_html);
     let link_selector = Selector::parse("a").unwrap();
-    
-
     let mut links: Vec<Box<String>> = Vec::new();
 
     for lnk in document.select(&link_selector) {
@@ -65,6 +38,18 @@ fn get_links(raw_html: &String) -> Vec<Box<String>> {
         }
     }
     links
+}
+
+fn get_images(raw_html: &String) -> Vec<Box<String>> {
+    let document = Html::parse_document(raw_html);
+    let image_selector = Selector::parse("img").unwrap();
+    let mut images: Vec<Box<String>> = Vec::new();
+
+    for img in document.select(&image_selector) {
+        let src = img.value().attr("src").unwrap_or("invalid image").to_owned();
+        images.push(Box::new(src));
+    }
+    images
 }
 
 
