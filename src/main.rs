@@ -1,5 +1,5 @@
 use std::{env, io};
-
+use scraper::{Html, Selector};
 
 //use openssl::ssl::{SslMethod, SslConnectorBuilder, SslConnector};
 fn main() {
@@ -19,5 +19,15 @@ fn main() {
 fn main_inner(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     let response = reqwest::blocking::get(url)?.text()?;
     println!("{}", response);
+    //response.matches(is_link());
     Ok(())
 }
+
+// fn is_link(text: String) -> bool {
+//     if text.starts_with("http") && text.ends_with("</a>") {
+//         return true
+//     } else {
+//         false
+//     }
+// }
+
