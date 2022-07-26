@@ -16,19 +16,18 @@ fn main() {
         Err(e) => {
             println!("{}", e);
         }
-    }
-
-    
+    }    
 }
-
+// Takes a url and returns the html from that page 
 fn get_raw_html(url: &str) -> Result<String, Box<dyn std::error::Error>> {
     let response = reqwest::blocking::get(url)?.text()?;
     Ok(response)
 }
-
+// Takes a string containing html and returns a vector of boxes containing all the links
+// contained in the html 
 fn get_links(raw_html: &String) -> Vec<Box<String>> {
     let document = Html::parse_document(raw_html);
-    let link_selector = Selector::parse("a").unwrap();
+    let link_selector = Selector::parse("a").unwrap();  
     let mut links: Vec<Box<String>> = Vec::new();
 
     for lnk in document.select(&link_selector) {
@@ -40,6 +39,8 @@ fn get_links(raw_html: &String) -> Vec<Box<String>> {
     links
 }
 
+// Takes a string containing html and returns a vector of boxes containing all the images
+// contained in the html 
 fn get_images(raw_html: &String) -> Vec<Box<String>> {
     let document = Html::parse_document(raw_html);
     let image_selector = Selector::parse("img").unwrap();
@@ -51,6 +52,3 @@ fn get_images(raw_html: &String) -> Vec<Box<String>> {
     }
     images
 }
-
-
-
