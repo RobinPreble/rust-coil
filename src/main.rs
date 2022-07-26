@@ -20,14 +20,23 @@ fn main_inner(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     let response = reqwest::blocking::get(url)?.text()?;
     println!("{}", response);
     //response.matches(is_link());
+
+    let document = Html::parse_document(&response);
+    let article_selector = Selector::parse("a").unwrap();
+
+    let mut links: Vec<&str> = Vec::new();
+
+    for element in document.select(&article_selector) {
+        let href = element.value().attr("href").unwrap_or("invalid link");
+        if href.starts_with("http"){
+            links.push(&href);
+        }
+    }
+    println!("Links: {:?}", links);
+
+    
     Ok(())
 }
 
-// fn is_link(text: String) -> bool {
-//     if text.starts_with("http") && text.ends_with("</a>") {
-//         return true
-//     } else {
-//         false
-//     }
-// }
+
 
