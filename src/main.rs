@@ -23,7 +23,7 @@ fn main() {
 // Takes a url and returns the html from that page 
 fn get_raw_html(url: &str) -> Result<String, Box<dyn std::error::Error>> {
     let client = reqwest::blocking::Client::new();
-    let response = client.get(url).header("Accept-Encoding", "identity").send()?;
+    let response = client.get(url).header("User-Agent", "curl/7.79.1").send()?;
     Ok(response.text().unwrap())
 }
 // Takes a string containing html and returns a vector of boxes containing all the links
