@@ -1,7 +1,9 @@
 use std::env;
+use reqwest::{header::ACCEPT_ENCODING, Identity};
 use scraper::{Html, Selector};
 
 fn main() {
+    // takes full url as an argument, for example, https://www.google.com/ 
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
         panic!("Please provide the url as an argument");
@@ -20,8 +22,9 @@ fn main() {
 }
 // Takes a url and returns the html from that page 
 fn get_raw_html(url: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let response = reqwest::blocking::get(url)?.text()?;
-    Ok(response)
+    let client = reqwest::blocking::Client::new();
+    let response = client.get(url).header("Accept-Encoding", "identity").send()?;
+    Ok(response.text().unwrap())
 }
 // Takes a string containing html and returns a vector of boxes containing all the links
 // contained in the html 
